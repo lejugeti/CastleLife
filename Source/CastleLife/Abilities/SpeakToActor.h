@@ -7,6 +7,8 @@
 
 #include "SpeakToActor.generated.h"
 
+class ACastleLifeCharacter;
+class UConversation;
 class UTextRenderComponent;
 
 /**
@@ -24,7 +26,6 @@ public:
 	static const FName& GetTag() { return TriggerTag; }
 	
 protected:
-	// inline static const FGameplayTag Tag = FGameplayTag::RequestGameplayTag("Ability.Character.Speak");
 	inline static const FName TriggerTag = FName("Ability.Character.Speak");
 
 	UPROPERTY()
@@ -34,4 +35,10 @@ protected:
 	
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
+	/**
+	 * Tries to retrieve the character's conversation in which it takes part.
+	 * If none exists, the function creates one.
+	 */
+	UFUNCTION()
+	UConversation* GetCharacterConversation(const ACastleLifeCharacter* Character) const;
 };

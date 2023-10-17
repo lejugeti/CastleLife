@@ -25,6 +25,12 @@ protected:
     UAbilitySystemComponent* AbilitySystemComponent;
 
     /**
+     * Supposed to be unique for each character
+     */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Name")
+    FName Name;
+    
+    /**
      * \brief Data representing character's sentences
      */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Speaking Data")
@@ -49,14 +55,17 @@ public:
     UFUNCTION(BlueprintCallable)
     virtual FEventReactSentence GetSpeakPhraseByTagName(const FName& SentenceTagName) const override;
 
-    // Delegates for actor communication
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterSpeak, FGameplayTag, SentenceTag);
-
-    UPROPERTY(BlueprintAssignable, Category = "Speak Event")
-    FOnCharacterSpeak OnCharacterSpeak;
-
-    virtual void BindToOnCharacterSpeak(const ACastleLifeCharacter* Character);
-
-    virtual void NotifyOnCharacterEndSpeaking(FGameplayTag SentenceTag);
+    UFUNCTION(BlueprintCallable)
+    virtual TArray<FEventReactSentence> GetSpeakPhraseListByTagName(const FName& SentenceTagName) const override;
     
+    /**
+     * Handle to when a character has spoken
+     * @param SentenceTagName Tag name of the sentence spoken
+     * @param Emitter Character which emitted the sentence
+     * @see UConversation#BindCharacterToOnCharacterUseSentence
+     */
+    UFUNCTION()
+    void HandleOnCharacterSpoke(const FName& SentenceTagName, ACastleLifeCharacter* Emitter);
 };
+
+

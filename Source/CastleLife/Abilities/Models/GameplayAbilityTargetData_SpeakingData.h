@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbilityTargetTypes.h"
+#include "CastleLife/Characters/CastleLifeCharacter.h"
+#include "CastleLife/Characters/Conversations/Conversation.h"
 #include "GameplayAbilityTargetData_SpeakingData.generated.h"
 
 /**
@@ -16,10 +18,22 @@ struct CASTLELIFE_API FGameplayAbilityTargetData_SpeakingData : public FGameplay
 
 public:
 
-    FGameplayAbilityTargetData_SpeakingData() {}
+    FGameplayAbilityTargetData_SpeakingData(): Conversation(nullptr) {}
     
     UPROPERTY()
-    FName Sentence;
+    FName SentenceTagName;
+
+    /**
+     * Receivers to which the sentence is directed
+     */
+    UPROPERTY()
+    TArray<ACastleLifeCharacter*> Receivers;
+
+    /**
+     * Conversation in which the sentence takes place
+     */
+    UPROPERTY()
+    UConversation* Conversation;
 
     virtual UScriptStruct* GetScriptStruct() const override
     {
