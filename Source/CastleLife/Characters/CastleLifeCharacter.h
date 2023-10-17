@@ -66,6 +66,17 @@ public:
      */
     UFUNCTION()
     void HandleOnCharacterSpoke(const FName& SentenceTagName, ACastleLifeCharacter* Emitter);
+
+    // Necessary in order to be used in {@link TSet}
+    UE_NODISCARD FORCEINLINE bool operator==(const ACastleLifeCharacter& Other) const
+    {
+        return this->Name == Other.Name;
+    }
+    
+    friend FORCEINLINE uint32 GetTypeHash(const ACastleLifeCharacter& Character)
+    {
+        return FCrc::TypeCrc32(Character);
+    }
 };
 
 

@@ -9,7 +9,7 @@
 #include "CastleLife/Characters/CastleLifeCharacter.h"
 
 FGameplayEventData UGameplayAbilityPayloadGenerator::BuildSpeakToActorAbilityPayload(
-    ACastleLifeCharacter* Instigator, const TArray<ACastleLifeCharacter*>& Receivers, const FName& SentenceTagName)
+    ACastleLifeCharacter* Instigator, const TSet<ACastleLifeCharacter*>& Receivers, const FName& SentenceTagName)
 {
     const FGameplayTag AbilityTriggerTag = FGameplayTag::RequestGameplayTag(USpeakToActor::GetTag());
 

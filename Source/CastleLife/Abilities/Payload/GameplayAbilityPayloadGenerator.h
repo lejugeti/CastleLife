@@ -18,5 +18,5 @@ class CASTLELIFE_API UGameplayAbilityPayloadGenerator : public UObject
 
 public:
     UFUNCTION(BlueprintPure, Category="Ability Payload")
-    static FGameplayEventData BuildSpeakToActorAbilityPayload(ACastleLifeCharacter* Instigator, const TArray<ACastleLifeCharacter*>& Receivers, const FName& SentenceTagName);
+    static FGameplayEventData BuildSpeakToActorAbilityPayload(ACastleLifeCharacter* Instigator, const TSet<ACastleLifeCharacter*>& Receivers, const FName& SentenceTagName);
 };

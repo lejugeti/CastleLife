@@ -3,7 +3,7 @@
 
 #include "Conversation.h"
 
-TArray<ACastleLifeCharacter*> UConversation::GetProtagonists()
+TSet<ACastleLifeCharacter*> UConversation::GetProtagonists()
 {
     return Protagonists;
 }
@@ -19,7 +19,7 @@ int UConversation::AddProtagonist(ACastleLifeCharacter* NewProtagonist)
     return Protagonists.Num();
 }
 
-int UConversation::AddAllProtagonists(const TArray<ACastleLifeCharacter*>& NewProtagonists)
+int UConversation::AddAllProtagonists(const TSet<ACastleLifeCharacter*>& NewProtagonists)
 {
     Protagonists.Append(NewProtagonists);
     BindCharacterListToOnCharacterUseSentence(NewProtagonists);
@@ -38,7 +38,7 @@ void UConversation::BindCharacterToOnCharacterUseSentence(ACastleLifeCharacter* 
     OnCharacterUseSentence.AddUnique(Delegate);
 }
 
-void UConversation::BindCharacterListToOnCharacterUseSentence(const TArray<ACastleLifeCharacter*>& Listeners)
+void UConversation::BindCharacterListToOnCharacterUseSentence(const TSet<ACastleLifeCharacter*>& Listeners)
 {
     for (const auto& Listener : Listeners)
     {

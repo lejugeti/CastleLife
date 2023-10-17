@@ -27,7 +27,7 @@ public:
      * Receivers to which the sentence is directed
      */
     UPROPERTY()
-    TArray<ACastleLifeCharacter*> Receivers;
+    TSet<ACastleLifeCharacter*> Receivers;
 
     /**
      * Conversation in which the sentence takes place

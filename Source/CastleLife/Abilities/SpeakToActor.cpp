@@ -43,7 +43,6 @@ void USpeakToActor::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
     const FEventReactSentence Sentence = CharacterSpeaking->GetSpeakPhraseByTagName(SpeakingData->SentenceTagName);
     SpeakingZone->SetText(FText::FromString(Sentence.Sentence));
 
-    // ACastleLifeCharacter* Character = Cast<ACastleLifeCharacter>(CharacterSpeaking);
     UConversation* Conversation = SpeakingData->Conversation == nullptr
                                       ? GetCharacterConversation(CharacterSpeaking)
                                       : SpeakingData->Conversation;

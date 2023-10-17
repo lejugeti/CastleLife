@@ -17,25 +17,17 @@ class CASTLELIFE_API UConversation : public UObject
 
 protected:
     UPROPERTY()
-    TArray<ACastleLifeCharacter*> Protagonists;
+    TSet<ACastleLifeCharacter*> Protagonists;
 
-    UPROPERTY()
-    TArray<FString> Strings;
 public:
     UFUNCTION(BlueprintCallable, BlueprintPure)
-    TArray<ACastleLifeCharacter*> GetProtagonists();
-
-    UFUNCTION(BlueprintCallable, BlueprintPure)
-    TArray<FString> GetStrings()
-    {
-        return Strings;
-    }
+    TSet<ACastleLifeCharacter*> GetProtagonists();
 
     UFUNCTION(BlueprintCallable, BlueprintPure)
     int AddProtagonist(ACastleLifeCharacter* NewProtagonist);
 
     UFUNCTION(BlueprintCallable, BlueprintPure)
-    int AddAllProtagonists(const TArray<ACastleLifeCharacter*>& NewProtagonists);
+    int AddAllProtagonists(const TSet<ACastleLifeCharacter*>& NewProtagonists);
 
     UFUNCTION(BlueprintCallable, BlueprintPure)
     bool Includes(const ACastleLifeCharacter* Character) const;
@@ -51,7 +43,7 @@ public:
     void BindCharacterToOnCharacterUseSentence(ACastleLifeCharacter* Listener);
 
     UFUNCTION(BlueprintCallable)
-    void BindCharacterListToOnCharacterUseSentence(const TArray<ACastleLifeCharacter*>& Listeners);
+    void BindCharacterListToOnCharacterUseSentence(const TSet<ACastleLifeCharacter*>& Listeners);
 
     UFUNCTION(BlueprintCallable)
     void NotifyOnCharacterUseSentence(const FName& SentenceTagName, ACastleLifeCharacter* Emitter,
