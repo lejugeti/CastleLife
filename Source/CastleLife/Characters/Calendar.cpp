@@ -46,9 +46,9 @@ void UCalendar::CheckNpcSchedule() {
 
 void UCalendar::NotifyNpcForNextEvent() {
 	// TODO: Passer le prochain �v�nement au png via le delegate
-	if (npcDelegate.IsBound()) {
+	if (NpcDelegate.IsBound()) {
 		GEngine->AddOnScreenDebugMessage(-2, 3.0f, FColor::Red, TEXT("throw event"));
-		npcDelegate.ExecuteIfBound();
+		NpcDelegate.ExecuteIfBound();
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "NotifyNpcForNextEvent not bound.");
 	}

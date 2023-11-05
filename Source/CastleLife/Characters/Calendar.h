@@ -23,7 +23,7 @@ public:
 
 	DECLARE_DELEGATE(FNpcActionDelegate);
 
-	FNpcActionDelegate npcDelegate;
+	FNpcActionDelegate NpcDelegate;
 
 
 protected:
