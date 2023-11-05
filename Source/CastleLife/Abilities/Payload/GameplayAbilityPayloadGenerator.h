@@ -7,6 +7,7 @@
 #include "UObject/Object.h"
 #include "GameplayAbilityPayloadGenerator.generated.h"
 
+class ACastleLifeCharacter;
 /**
  * 
  */
@@ -17,5 +18,5 @@ class CASTLELIFE_API UGameplayAbilityPayloadGenerator : public UObject
 
 public:
     UFUNCTION(BlueprintPure, Category="Ability Payload")
-    static FGameplayEventData BuildSpeakToActorAbilityPayload(AActor* Instigator, const FName& SentenceTagName);
+    static FGameplayEventData BuildSpeakToActorAbilityPayload(ACastleLifeCharacter* Instigator, const TSet<ACastleLifeCharacter*>& Receivers, const FName& SentenceTagName);
 };

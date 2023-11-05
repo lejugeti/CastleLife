@@ -6,7 +6,6 @@
 #include "AbilitySystemComponent.h"
 #include "CastleLife/Abilities/SpeakToActor.h"
 
-
 // Sets default values
 ACastleLifeCharacter::ACastleLifeCharacter()
 {
@@ -22,23 +21,9 @@ void ACastleLifeCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
+    checkf(!Name.IsNone(), TEXT("The character name must be defined."))
+    
     AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(USpeakToActor::StaticClass()));
-	
-    // FGameplayTag SpeakTag = FGameplayTag::RequestGameplayTag("Ability.Character.Speak");
-    // FGameplayAbilityTargetData_SpeakingData* SpeakingData = new FGameplayAbilityTargetData_SpeakingData();
-    // SpeakingData->SentenceTag = FGameplayTag::RequestGameplayTag("Test.Speak.2");
-    //
-    // FGameplayAbilityTargetDataHandle Handle;
-    // Handle.Add(SpeakingData);
-    //
-    // FGameplayEventData Data;
-    // Data.EventTag = SpeakTag;
-    // Data.Instigator = this;
-    // Data.OptionalObject = TObjectPtr<UObject>(this);
-    // Data.TargetData = Handle;
-	
-    // UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, SpeakTag, Data);
-
 }
 
 // Called every frame
@@ -51,6 +36,15 @@ void ACastleLifeCharacter::Tick(float DeltaTime)
 void ACastleLifeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ACastleLifeCharacter::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
+{
+    for(const FName TagName: Tags)
+    {
+        FGameplayTag TagToAdd = FGameplayTag::RequestGameplayTag(TagName);
+        TagContainer.AddTag(TagToAdd);
+    }
 }
 
 UAbilitySystemComponent* ACastleLifeCharacter::GetAbilitySystemComponent() const
@@ -69,12 +63,36 @@ FEventReactSentence ACastleLifeCharacter::GetSpeakPhraseByTagName(const FName& S
     return *Sentence;
 }
 
-void ACastleLifeCharacter::BindToOnCharacterSpeak(const ACastleLifeCharacter* Character) {
-    // TScriptDelegate BindFunction;
-    // BindFunction.BindUFunction(NpcCharacter, )
-    // OnCharacterSpeak.Add()
+TArray<FEventReactSentence> ACastleLifeCharacter::GetSpeakPhraseListByTagName(const FName& SentenceTagName) const
+{
+    TArray<FEventReactSentence> Sentences;
+    const TArray<FName> RowNames = SpeakingDataTable->GetRowNames();
+
+    for (const FName& RowName : RowNames)
+    {
+        const FString Regex = FString::Printf(TEXT("^Conversation.ReactTo.%s"), *SentenceTagName.ToString());
+        
+        if(FRegexMatcher Matcher(FRegexPattern(Regex), RowName.ToString());
+            Matcher.FindNext())
+        {
+            const FEventReactSentence* Sentence = SpeakingDataTable->FindRow<FEventReactSentence>(RowName, FString("GetSpeakPhraseListByTagName"));
+            Sentences.Add(*Sentence);
+        }
+    }
+    
+    return Sentences;
 }
 
-void ACastleLifeCharacter::NotifyOnCharacterEndSpeaking(const FGameplayTag SentenceTag) {
-    OnCharacterSpeak.Broadcast(SentenceTag);
+void ACastleLifeCharacter::HandleOnCharacterStartSpeaking_Implementation(const FName& SentenceTagName,
+                                                                         ACastleLifeCharacter* Emitter, UConversation* Conversation)
+{
+    if(Name != Emitter->Name)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Character %s : HandleOnCharacterStartSpeaking. Should be blueprint implemented."), *Name.ToString());
+    }
+}
+
+void ACastleLifeCharacter::HandleOnCharacterEndSpeaking_Implementation(const FName& SentenceTagName, ACastleLifeCharacter* Emitter, UConversation* Conversation)
+{
+    UE_LOG(LogTemp, Error, TEXT("Character %s : HandleOnCharacterEndSpeaking. Should be blueprint implemented."), *Name.ToString());
 }

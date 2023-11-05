@@ -10,9 +10,6 @@ ANpc_Character::ANpc_Character()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	// AbilitySystemComponent->SetIsReplicated(false);
-
 	Calendar = CreateDefaultSubobject<UCalendar>(TEXT("Calendar"));
 }
 
@@ -27,7 +24,7 @@ void ANpc_Character::BeginPlay()
 		check(WorldClockFound.Num() == 1)
 		const AClock* WorldClock = Cast<AClock>(WorldClockFound[0]);
 		Calendar->Initialize(WorldClock);
-		Calendar->npcDelegate.BindUObject(this, &ANpc_Character::OnNewScheduleEventNotification);
+		Calendar->NpcDelegate.BindUObject(this, &ANpc_Character::OnNewScheduleEventNotification);
 		checkf(Calendar->IsValid(), TEXT("Calendar clock must be initialized."))
 	}
 }

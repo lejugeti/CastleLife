@@ -8,8 +8,14 @@ namespace CastleLifeGameplayTags
 {
 	CASTLELIFE_API	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString = false);
 
-	// Declare all of the custom native tags that CastleLife will use
+	// Dependency injection
+	CASTLELIFE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Tag_Cleaner);
+	
+	// Abilities
 	CASTLELIFE_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Character_Speak);
+
+	// Test
+	CASTLELIFE_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Test_Tag);
 
 	/*// These are mappings from MovementMode enums to GameplayTags associated with those enums (below)
 	LYRAGAME_API	extern const TMap<uint8, FGameplayTag> MovementModeTagMap;

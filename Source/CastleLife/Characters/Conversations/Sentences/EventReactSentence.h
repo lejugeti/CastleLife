@@ -23,4 +23,14 @@ struct FEventReactSentence : public FTableRowBase
     /** Sentence that the NPC can say in reaction to the Tag represented by the row name */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=ReactionSentence)
     FString Sentence;
+
+    friend FORCEINLINE uint32 GetTypeHash(const FEventReactSentence& Sentence)
+    {
+        return FCrc::TypeCrc32(Sentence);
+    }
+
+    UE_NODISCARD FORCEINLINE bool operator==(const FEventReactSentence& OtherSentence) const
+    {
+        return this->Sentence == OtherSentence.Sentence;
+    }  
 };

@@ -3,8 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagAssetInterface.h"
 #include "GameplayTagContainer.h"
-#include "Sentences/EventReactSentence.h"
+#include "Conversations/Sentences/EventReactSentence.h"
 #include "UObject/Object.h"
 #include "IGameCharacter.generated.h"
 
@@ -17,7 +18,7 @@ class UGameCharacter : public UInterface
     GENERATED_BODY()
 };
 
-class IGameCharacter
+class IGameCharacter: public IGameplayTagAssetInterface
 {
     GENERATED_BODY()
 
@@ -27,14 +28,21 @@ public:
     {
         checkf(false, TEXT("Method GetSpeakPhraseByTagName is not yet implemented"))
         return FEventReactSentence();
-    };
+    }
 
     UFUNCTION()
     virtual FEventReactSentence GetSpeakPhraseByTag(const FGameplayTag& SentenceTag) const
     {
         checkf(false, TEXT("Method GetSpeakPhraseByTag is not yet implemented"))
         return FEventReactSentence();
-    };
+    }
+
+    UFUNCTION()
+    virtual TArray<FEventReactSentence> GetSpeakPhraseListByTagName(const FName& SentenceTagName) const
+    {
+        checkf(false, TEXT("Method GetSpeakPhraseListByTagName is not yet implemented"))
+        return TArray<FEventReactSentence>();
+    }
 
 };
 

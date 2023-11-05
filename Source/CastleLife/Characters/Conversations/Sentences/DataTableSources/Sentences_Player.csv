@@ -1,0 +1,6 @@
+Name,Sentence
+"Event.Meet.Player","Hello there."
+
+"Conversation.ReactTo.Event.Meet.Player","Well hello."
+"Conversation.ReactTo.Event.Meet.Player.2","Hey."
+"Conversation.ReactTo.Event.Meet.Player.3","Good morning."
