@@ -24,7 +24,7 @@ void ANpc_Character::BeginPlay()
 		check(WorldClockFound.Num() == 1)
 		const AClock* WorldClock = Cast<AClock>(WorldClockFound[0]);
 		Calendar->Initialize(WorldClock);
-		Calendar->npcDelegate.BindUObject(this, &ANpc_Character::OnNewScheduleEventNotification);
+		Calendar->NpcDelegate.BindUObject(this, &ANpc_Character::OnNewScheduleEventNotification);
 		checkf(Calendar->IsValid(), TEXT("Calendar clock must be initialized."))
 	}
 }

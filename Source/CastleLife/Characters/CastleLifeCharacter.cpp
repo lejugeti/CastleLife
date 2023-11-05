@@ -6,7 +6,6 @@
 #include "AbilitySystemComponent.h"
 #include "CastleLife/Abilities/SpeakToActor.h"
 
-
 // Sets default values
 ACastleLifeCharacter::ACastleLifeCharacter()
 {
@@ -37,6 +36,15 @@ void ACastleLifeCharacter::Tick(float DeltaTime)
 void ACastleLifeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ACastleLifeCharacter::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
+{
+    for(const FName TagName: Tags)
+    {
+        FGameplayTag TagToAdd = FGameplayTag::RequestGameplayTag(TagName);
+        TagContainer.AddTag(TagToAdd);
+    }
 }
 
 UAbilitySystemComponent* ACastleLifeCharacter::GetAbilitySystemComponent() const
@@ -75,11 +83,16 @@ TArray<FEventReactSentence> ACastleLifeCharacter::GetSpeakPhraseListByTagName(co
     return Sentences;
 }
 
-void ACastleLifeCharacter::HandleOnCharacterSpoke(const FName& SentenceTagName, ACastleLifeCharacter* Emitter)
+void ACastleLifeCharacter::HandleOnCharacterStartSpeaking_Implementation(const FName& SentenceTagName,
+                                                                         ACastleLifeCharacter* Emitter, UConversation* Conversation)
 {
     if(Name != Emitter->Name)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Character %s : HandleSentenceUsed"), *Name.ToString());
-        
+        UE_LOG(LogTemp, Error, TEXT("Character %s : HandleOnCharacterStartSpeaking. Should be blueprint implemented."), *Name.ToString());
     }
+}
+
+void ACastleLifeCharacter::HandleOnCharacterEndSpeaking_Implementation(const FName& SentenceTagName, ACastleLifeCharacter* Emitter, UConversation* Conversation)
+{
+    UE_LOG(LogTemp, Error, TEXT("Character %s : HandleOnCharacterEndSpeaking. Should be blueprint implemented."), *Name.ToString());
 }

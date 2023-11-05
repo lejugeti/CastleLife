@@ -6,10 +6,15 @@
 
 namespace CastleLifeGameplayTags
 {
+	// Dependency injection
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Tag_Cleaner, "Tag.Cleaner", "Tag cleaner identifier")
+	
+	// Abilities
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Character_Speak, "Ability.Character.Speak", "Character speaks");
 
 	// TEST TAG
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Test_Tag_Speak, "Test.Speak.2", "Character speaks");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Test_Tag, "Test.Tag", "Tag for tests");
 
 
 	// These are mapped to the movement modes inside GetMovementModeTagMap()

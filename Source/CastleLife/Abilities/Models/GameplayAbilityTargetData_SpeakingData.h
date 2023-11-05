@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbilityTargetTypes.h"
 #include "CastleLife/Characters/CastleLifeCharacter.h"
 #include "CastleLife/Characters/Conversations/Conversation.h"
+#include "CastleLife/Characters/Conversations/SpeakingAttitude.h"
 #include "GameplayAbilityTargetData_SpeakingData.generated.h"
 
 /**
@@ -18,11 +19,14 @@ struct CASTLELIFE_API FGameplayAbilityTargetData_SpeakingData : public FGameplay
 
 public:
 
-    FGameplayAbilityTargetData_SpeakingData(): Conversation(nullptr) {}
+    FGameplayAbilityTargetData_SpeakingData(): SpeakingAttitude(ESpeakingAttitude::Normal), Conversation(nullptr) {}
     
     UPROPERTY()
     FName SentenceTagName;
 
+    UPROPERTY()
+    ESpeakingAttitude SpeakingAttitude;
+    
     /**
      * Receivers to which the sentence is directed
      */

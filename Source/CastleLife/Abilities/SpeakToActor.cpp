@@ -6,17 +6,24 @@
 #include "CastleLife/Characters/Conversations/Conversation.h"
 #include "CastleLife/Characters/Conversations/ConversationManager.h"
 #include "CastleLife/Characters/Conversations/Sentences/EventReactSentence.h"
+#include "CastleLife/Tags/TagMapper.h"
 #include "Components/TextRenderComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Models/GameplayAbilityTargetData_SpeakingData.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "CastleLife/Tags/CastleLifeGameplayTags.h"
+#include "CastleLife/Tags/TagCleaner.h"
 
 USpeakToActor::USpeakToActor()
 {
-    checkf(TriggerTag.IsValid(), TEXT("Le tag de déclenchement de USpeakToActor doit être défini."))
-
     FAbilityTriggerData TriggerData;
     TriggerData.TriggerTag = FGameplayTag::RequestGameplayTag(TriggerTag);
     this->AbilityTriggers.Add(TriggerData);
+
+    UTagMapper* TagMapper = NewObject<UTagMapper>() ;
+    this->ActivationOwnedTags = TagMapper->ToTagContainer(OwnerTagsOnActivation);
+    this->ActivationBlockedTags = TagMapper->ToTagContainer(OwnerBlockingTags);
 }
 
 void USpeakToActor::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -31,34 +38,40 @@ void USpeakToActor::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
         SpeakingZone = CharacterSpeakingZone;
     }
     check(SpeakingZone != nullptr)
-
+    
     FGameplayAbilityTargetDataHandle HandleData = TriggerEventData->TargetData;
     FGameplayAbilityTargetData* Data = HandleData.Get(0);
-
+    
     checkf(Data != nullptr && Data->GetScriptStruct() == FGameplayAbilityTargetData_SpeakingData::StaticStruct(),
            TEXT("No speaking data, or wrong data type."))
-
-    const FGameplayAbilityTargetData_SpeakingData* SpeakingData = StaticCast<FGameplayAbilityTargetData_SpeakingData
-        *>(Data);
-    const FEventReactSentence Sentence = CharacterSpeaking->GetSpeakPhraseByTagName(SpeakingData->SentenceTagName);
+    
+    const FGameplayAbilityTargetData_SpeakingData* SpeakingData = StaticCast<FGameplayAbilityTargetData_SpeakingData*>(Data);
+    LastSentenceTagName = SpeakingData->SentenceTagName;
+    const FEventReactSentence Sentence = CharacterSpeaking->GetSpeakPhraseByTagName(LastSentenceTagName);
     SpeakingZone->SetText(FText::FromString(Sentence.Sentence));
-
-    UConversation* Conversation = SpeakingData->Conversation == nullptr
+    
+    CurrentConversation = SpeakingData->Conversation == nullptr
                                       ? GetCharacterConversation(CharacterSpeaking)
                                       : SpeakingData->Conversation;
     
-    Conversation->AddProtagonist(CharacterSpeaking);
-    Conversation->AddAllProtagonists(SpeakingData->Receivers);
-    Conversation->NotifyOnCharacterUseSentence(SpeakingData->SentenceTagName, CharacterSpeaking, Conversation);
+    CurrentConversation->AddProtagonist(CharacterSpeaking);
+    CurrentConversation->AddAllProtagonists(SpeakingData->Receivers);
+    CurrentConversation->NotifyOnCharacterStartSpeaking(SpeakingData->SentenceTagName, CharacterSpeaking, CurrentConversation);
 
-    EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
+    FGameplayTagContainer TagContainer;
+    CharacterSpeaking->GetOwnedGameplayTags(TagContainer);
+
+    EndAbility(Handle, ActorInfo, ActivationInfo, false, true);
 }
 
 void USpeakToActor::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility,
                                bool bWasCancelled)
 {
-    // UE_LOG(LogTemp, Warning, TEXT("USpeakToActor end"));
+    check(CurrentConversation != nullptr)
+    ACastleLifeCharacter* CharacterSpeaking = GetOwner(*ActorInfo);
+    GetTagCleaner()->RemoveGameplayAbilityTags(CharacterSpeaking, OwnerTagsOnActivation);
+    CurrentConversation->NotifyOnCharacterEndSpeaking(LastSentenceTagName, CharacterSpeaking, CurrentConversation);
 }
 
 UConversation* USpeakToActor::GetCharacterConversation(const ACastleLifeCharacter* Character) const
@@ -81,3 +94,26 @@ UConversation* USpeakToActor::GetCharacterConversation(const ACastleLifeCharacte
 
     return Conversation;
 }
+
+ACastleLifeCharacter* USpeakToActor::GetOwner(const FGameplayAbilityActorInfo& ActorInformation) const
+{
+    return Cast<ACastleLifeCharacter>(ActorInformation.OwnerActor);
+}
+
+ATagCleaner* USpeakToActor::GetTagCleaner()
+{
+    if(TagCleaner == nullptr)
+    {
+        UWorld* World = GetWorld();
+        check(World != nullptr)
+
+        TArray<AActor*> TagCleanersFound;
+        UGameplayStatics::GetAllActorsWithTag(World, CastleLifeGameplayTags::Tag_Cleaner.GetTag().GetTagName(), TagCleanersFound);
+        check(TagCleanersFound.Num() == 1);
+
+        TagCleaner = Cast<ATagCleaner>(TagCleanersFound[0]);
+    }
+    check(TagCleaner != nullptr)
+    return TagCleaner;
+}
+

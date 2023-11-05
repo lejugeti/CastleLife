@@ -13,7 +13,8 @@ int UConversation::AddProtagonist(ACastleLifeCharacter* NewProtagonist)
     if (!Protagonists.Contains(NewProtagonist))
     {
         Protagonists.Add(NewProtagonist);
-        BindCharacterToOnCharacterUseSentence(NewProtagonist);
+        BindCharacterToOnCharacterStartSpeaking(NewProtagonist);
+        BindCharacterToOnCharacterEndSpeaking(NewProtagonist);
     }
 
     return Protagonists.Num();
@@ -21,8 +22,11 @@ int UConversation::AddProtagonist(ACastleLifeCharacter* NewProtagonist)
 
 int UConversation::AddAllProtagonists(const TSet<ACastleLifeCharacter*>& NewProtagonists)
 {
-    Protagonists.Append(NewProtagonists);
-    BindCharacterListToOnCharacterUseSentence(NewProtagonists);
+    for(ACastleLifeCharacter* Character : NewProtagonists)
+    {
+        this->AddProtagonist(Character);
+    }
+
     return Protagonists.Num();
 }
 
@@ -31,25 +35,28 @@ bool UConversation::Includes(const ACastleLifeCharacter* Character) const
     return Protagonists.Contains(Character);
 }
 
-void UConversation::BindCharacterToOnCharacterUseSentence(ACastleLifeCharacter* Listener)
+void UConversation::BindCharacterToOnCharacterStartSpeaking(ACastleLifeCharacter* Listener)
 {
     TScriptDelegate<> Delegate;
-    Delegate.BindUFunction(Listener, FName("HandleSentenceUsed"));
-    OnCharacterUseSentence.AddUnique(Delegate);
+    Delegate.BindUFunction(Listener, FName("HandleOnCharacterStartSpeaking"));
+    OnCharacterStartSpeaking.AddUnique(Delegate);
 }
 
-void UConversation::BindCharacterListToOnCharacterUseSentence(const TSet<ACastleLifeCharacter*>& Listeners)
+void UConversation::NotifyOnCharacterStartSpeaking(const FName& SentenceTagName, ACastleLifeCharacter* Emitter,
+                                                   UConversation* Conversation) const
 {
-    for (const auto& Listener : Listeners)
-    {
-        TScriptDelegate<> Delegate;
-        Delegate.BindUFunction(Listener, FName("HandleOnCharacterSpoke"));
-        OnCharacterUseSentence.AddUnique(Delegate);
-    }
+    OnCharacterStartSpeaking.Broadcast(SentenceTagName, Emitter, Conversation);
 }
 
-void UConversation::NotifyOnCharacterUseSentence(const FName& SentenceTagName, ACastleLifeCharacter* Emitter,
+void UConversation::BindCharacterToOnCharacterEndSpeaking(ACastleLifeCharacter* Listener)
+{
+    TScriptDelegate<> Delegate;
+    Delegate.BindUFunction(Listener, FName("HandleOnCharacterEndSpeaking"));
+    OnCharacterEndSpeaking.AddUnique(Delegate);
+}
+
+void UConversation::NotifyOnCharacterEndSpeaking(const FName& SentenceTagName, ACastleLifeCharacter* Emitter,
                                                  UConversation* Conversation) const
 {
-    OnCharacterUseSentence.Broadcast(SentenceTagName, Emitter, Conversation);
+    OnCharacterEndSpeaking.Broadcast(SentenceTagName, Emitter, Conversation);
 }

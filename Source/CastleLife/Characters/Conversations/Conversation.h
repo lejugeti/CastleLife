@@ -37,15 +37,26 @@ public:
                                                    Emitter, UConversation*, Conversation);
 
     UPROPERTY(BlueprintAssignable, Category = "Speak Event")
-    FOnCharacterUseSentence OnCharacterUseSentence;
+    FOnCharacterUseSentence OnCharacterStartSpeaking;
 
     UFUNCTION(BlueprintCallable)
-    void BindCharacterToOnCharacterUseSentence(ACastleLifeCharacter* Listener);
+    void BindCharacterToOnCharacterStartSpeaking(ACastleLifeCharacter* Listener);
 
     UFUNCTION(BlueprintCallable)
-    void BindCharacterListToOnCharacterUseSentence(const TSet<ACastleLifeCharacter*>& Listeners);
+    void NotifyOnCharacterStartSpeaking(const FName& SentenceTagName, ACastleLifeCharacter* Emitter,
+                                      UConversation* Conversation) const;
+
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCharacterEndSpeaking, FName, SentenceTagName,
+                                               ACastleLifeCharacter*,
+                                               Emitter, UConversation*, Conversation);
+
+    UPROPERTY(BlueprintAssignable, Category = "Speak Event")
+    FOnCharacterEndSpeaking OnCharacterEndSpeaking;
 
     UFUNCTION(BlueprintCallable)
-    void NotifyOnCharacterUseSentence(const FName& SentenceTagName, ACastleLifeCharacter* Emitter,
+    void BindCharacterToOnCharacterEndSpeaking(ACastleLifeCharacter* Listener);
+
+    UFUNCTION(BlueprintCallable)
+    void NotifyOnCharacterEndSpeaking(const FName& SentenceTagName, ACastleLifeCharacter* Emitter,
                                       UConversation* Conversation) const;
 };
