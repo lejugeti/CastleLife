@@ -38,6 +38,11 @@ void ACastleLifeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+FName ACastleLifeCharacter::GetCharacterName() const
+{
+    return Name;
+}
+
 void ACastleLifeCharacter::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
 {
     for(const FName TagName: Tags)
