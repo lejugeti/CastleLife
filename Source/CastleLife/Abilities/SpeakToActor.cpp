@@ -12,6 +12,7 @@
 #include "Models/GameplayAbilityTargetData_SpeakingData.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "CastleLife/HUD/HudMessagePoster.h"
 #include "CastleLife/Tags/CastleLifeGameplayTags.h"
 #include "CastleLife/Tags/TagCleaner.h"
 
@@ -49,6 +50,9 @@ void USpeakToActor::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
     LastSentenceTagName = SpeakingData->SentenceTagName;
     const FEventReactSentence Sentence = CharacterSpeaking->GetSpeakPhraseByTagName(LastSentenceTagName);
     SpeakingZone->SetText(FText::FromString(Sentence.Sentence));
+
+    const FText HudSentence = FText::FromString(FormatSentenceForHud(Sentence.Sentence, CharacterSpeaking));
+    GetHudMessagePoster()->AddMessage(HudSentence);
     
     CurrentConversation = SpeakingData->Conversation == nullptr
                                       ? GetCharacterConversation(CharacterSpeaking)
@@ -57,9 +61,6 @@ void USpeakToActor::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
     CurrentConversation->AddProtagonist(CharacterSpeaking);
     CurrentConversation->AddAllProtagonists(SpeakingData->Receivers);
     CurrentConversation->NotifyOnCharacterStartSpeaking(SpeakingData->SentenceTagName, CharacterSpeaking, CurrentConversation);
-
-    FGameplayTagContainer TagContainer;
-    CharacterSpeaking->GetOwnedGameplayTags(TagContainer);
 
     EndAbility(Handle, ActorInfo, ActivationInfo, false, true);
 }
@@ -95,6 +96,11 @@ UConversation* USpeakToActor::GetCharacterConversation(const ACastleLifeCharacte
     return Conversation;
 }
 
+FString USpeakToActor::FormatSentenceForHud(const FString& Sentence, const ACastleLifeCharacter* SpeakingCharacter) const
+{
+    return FString::Printf(TEXT("%s : %s"), *SpeakingCharacter->GetCharacterName().ToString(), *Sentence);
+}
+
 ACastleLifeCharacter* USpeakToActor::GetOwner(const FGameplayAbilityActorInfo& ActorInformation) const
 {
     return Cast<ACastleLifeCharacter>(ActorInformation.OwnerActor);
@@ -117,3 +123,19 @@ ATagCleaner* USpeakToActor::GetTagCleaner()
     return TagCleaner;
 }
 
+AHudMessagePoster* USpeakToActor::GetHudMessagePoster()
+{
+    if(HudMessagePoster == nullptr)
+    {
+        const UWorld* World = GetWorld();
+        check(World != nullptr)
+
+        TArray<AActor*> ActorsFound;
+        UGameplayStatics::GetAllActorsOfClass(World, AHudMessagePoster::StaticClass(), ActorsFound);
+        check(ActorsFound.Num() == 1);
+
+        HudMessagePoster = Cast<AHudMessagePoster>(ActorsFound[0]);
+    }
+    check(HudMessagePoster != nullptr)
+    return HudMessagePoster;
+}

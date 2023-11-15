@@ -59,6 +59,8 @@ public:
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+    FName GetCharacterName() const;
+    
     /**
     * Get any owned gameplay tags on the asset
     * 
