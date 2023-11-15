@@ -7,6 +7,7 @@
 
 #include "SpeakToActor.generated.h"
 
+class AHudMessagePoster;
 class ACastleLifeCharacter;
 class UConversation;
 class UTextRenderComponent;
@@ -53,6 +54,9 @@ protected:
 	 */
 	UPROPERTY()
 	FName LastSentenceTagName;
+
+	UPROPERTY()
+	AHudMessagePoster* HudMessagePoster;
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	
@@ -69,7 +73,13 @@ protected:
 	ACastleLifeCharacter* GetOwner(const FGameplayAbilityActorInfo& ActorInformation) const;
 
 	UFUNCTION()
+	FString FormatSentenceForHud(const FString& Sentence, const ACastleLifeCharacter* SpeakingCharacter) const;
+	
+	UFUNCTION()
 	ATagCleaner* GetTagCleaner();
+
+	UFUNCTION()
+	AHudMessagePoster* GetHudMessagePoster();
 
 public:
 	UFUNCTION(BlueprintPure)
