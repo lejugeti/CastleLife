@@ -5,8 +5,7 @@ extends Node
 var ability_name: String
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
+func asser_valid_ability() -> void:
     assert(!ability_name.is_empty())
 
 

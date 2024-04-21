@@ -1,6 +1,8 @@
 class_name NavigateThroughDoor
 extends Ability
 
+const NAME: String = "navigate_through_door"
+
 const STANDING_ANIMATION: String = "standing"
 const DOOR_IN_ANIMATION: String = "door_in"
 const DOOR_OUT_ANIMATION: String = "door_out"
@@ -16,17 +18,9 @@ signal door_in_animation_finished
 signal door_out_animation_finished
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-    pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-    pass
-
-
 func _init(character: Character, door: Door):
+    self.ability_name = NAME;
+    super.asser_valid_ability()
     _character = character
     _door_to_use = door
 
@@ -60,5 +54,5 @@ func _on_door_character_quitted_door(character_leaving: Character):
     if(_character == character_leaving):
         _character.up_key_pressed.disconnect(execute)
         _door_to_use.character_quitted_door.disconnect(_on_door_character_quitted_door)
-        _character.ability_container.remove_ability(self)
+        _character.ability_component.remove_ability(self)
 
