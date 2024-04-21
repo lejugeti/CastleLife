@@ -1,17 +1,8 @@
-class_name AbilityContainer
+class_name AbilityComponent
 extends Node
 
 
 var _abilities: Array[Ability] = []
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-    pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-    pass
 
 
 func add_ability(ability: Ability):
@@ -22,4 +13,10 @@ func add_ability(ability: Ability):
 
 func remove_ability(ability: Ability):
     _abilities.erase(ability)
+
+
+func activate_by_name(ability_name: String):
+    for ability in self._abilities:
+        if(ability.get_ability_name() == ability_name):
+            ability.execute()
 

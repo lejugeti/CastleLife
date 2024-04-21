@@ -31,7 +31,7 @@ func _on_character_start_overlapping(body: Node2D):
 
         var character : Character = body as Character
         var enter_ability: NavigateThroughDoor = NavigateThroughDoor.new(character, self)
-        character.ability_container.add_ability(enter_ability)
+        character.ability_component.add_ability(enter_ability)
 
 
 func _on_character_stop_overlapping(body: Node2D):

@@ -1,7 +1,7 @@
 class_name Character
 extends CharacterBody2D
 
-var ability_container: AbilityContainer = AbilityContainer.new()
+var ability_component: AbilityComponent = AbilityComponent.new()
 var sprites: AnimatedSprite2D
 
 var movement_blocked: bool = false
