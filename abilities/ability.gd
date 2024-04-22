@@ -3,15 +3,11 @@ extends Node
 
 
 var ability_name: String
+var tag: Tag
 
 
-func asser_valid_ability() -> void:
+func assert_valid_ability() -> void:
     assert(!ability_name.is_empty())
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-    pass
 
 
 func get_ability_name() -> String:
@@ -23,4 +19,4 @@ func equals(other: Ability) -> bool:
 
 
 func execute():
-    pass
+    assert(false, "The execute method should be implemented.")

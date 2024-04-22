@@ -20,7 +20,9 @@ signal door_out_animation_finished
 
 func _init(character: Character, door: Door):
     self.ability_name = NAME;
-    super.asser_valid_ability()
+    self.tag = Tag.new("Navigation.Door")
+
+    super.assert_valid_ability()
     _character = character
     _door_to_use = door
 

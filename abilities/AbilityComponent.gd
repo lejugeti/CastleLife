@@ -20,3 +20,9 @@ func activate_by_name(ability_name: String):
         if(ability.get_ability_name() == ability_name):
             ability.execute()
 
+
+## Activates all abilities that share the same tag passed as argument
+func activate_by_tag(tag: Tag):
+    for ability in self._abilities:
+        if(ability.tag.equals(tag)):
+            ability.execute()
