@@ -19,6 +19,7 @@ func _process(delta):
         up_key_pressed.emit()
 
 
+
 func _physics_process(delta):
     var move_left: bool = Input.is_action_pressed("move_left")
     var move_right: bool = Input.is_action_pressed("move_right")
