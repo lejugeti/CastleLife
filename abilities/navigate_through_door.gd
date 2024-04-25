@@ -1,7 +1,7 @@
 class_name NavigateThroughDoor
 extends Ability
 
-const NAME: String = "navigate_through_door"
+static var NAME: String = "navigate_through_door"
 
 const STANDING_ANIMATION: String = "standing"
 const DOOR_IN_ANIMATION: String = "door_in"
@@ -57,4 +57,5 @@ func _on_door_character_quitted_door(character_leaving: Character):
         _character.up_key_pressed.disconnect(execute)
         _door_to_use.character_quitted_door.disconnect(_on_door_character_quitted_door)
         _character.ability_component.remove_ability(self)
+        self.is_active = false
 
