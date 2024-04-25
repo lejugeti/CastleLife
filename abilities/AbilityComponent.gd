@@ -2,6 +2,7 @@ class_name AbilityComponent
 extends Node
 
 
+## Abilities currently holded by the AbilityComponent
 var _abilities: Array[Ability] = []
 
 
@@ -35,12 +36,17 @@ func try_activate_ability(ability: Ability) -> void:
 
 
 func can_be_activated(ability: Ability) -> bool:
-    return all_required_tags_are_present(ability)
+    return all_required_tags_are_present(ability) && no_blocking_tag_are_present(ability)
 
 
 ## Determines if all required tags for activation are present in active abilities
 func all_required_tags_are_present(ability: Ability) -> bool:
     return ability.activation_required_tags.all(is_part_of_active_tags)
+
+
+## Determines no blocking tags are present in active abilities
+func no_blocking_tag_are_present(ability: Ability) -> bool:
+    return !ability.activation_blocking_tags.any(is_part_of_active_tags)
 
 
 func get_active_abilities() -> Array[Ability]:
