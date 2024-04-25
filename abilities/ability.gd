@@ -8,6 +8,9 @@ var tag: Tag
 ## Tags required in before activating this ability
 var activation_required_tags: Array[Tag] = []
 
+## Tags blocking the ability activation
+var activation_blocking_tags: Array[Tag] = []
+
 ## If the ability is currently active or not.
 ## One should plan to disable an ability after its job is done.
 var is_active = false
