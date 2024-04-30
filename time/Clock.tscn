@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bw82kjhkmopo5"]
+
+[ext_resource type="Script" path="res://time/Clock.gd" id="1_m71du"]
+
+[node name="Clock" type="Node2D"]
+script = ExtResource("1_m71du")
+
+[node name="Timer" type="Timer" parent="."]
