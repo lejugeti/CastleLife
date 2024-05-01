@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://crwsppw8ab11b"]
+
+[ext_resource type="Script" path="res://characters/events/Timetable.gd" id="1_vynj5"]
+
+[node name="Timetable" type="Node2D"]
+script = ExtResource("1_vynj5")

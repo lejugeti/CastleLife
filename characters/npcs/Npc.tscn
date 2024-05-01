@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmw1r280tj2m6"]
+
+[ext_resource type="Script" path="res://characters/npcs/Npc.gd" id="1_pkvi7"]
+[ext_resource type="Script" path="res://characters/events/Timetable.gd" id="2_m167m"]
+
+[node name="Npc" type="CharacterBody2D"]
+script = ExtResource("1_pkvi7")
+
+[node name="Timetable" type="Node2D" parent="."]
+script = ExtResource("2_m167m")

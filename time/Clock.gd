@@ -8,8 +8,15 @@ extends Node2D
 ## Unix representation of time
 var date_time: DateTime
 
+var timer: Timer
+
 ## Fired every time time has changed on the clock
-signal time_changed(date_time: String)
+signal time_changed(date_time: DateTime)
+
+
+func _ready():
+    timer = Timer.new()
+    add_child(timer)
 
 
 func start(initial_date_time: String) -> void:
@@ -19,6 +26,9 @@ func start(initial_date_time: String) -> void:
 
 
 func add_time():
+    assert(date_time != null)
+
     date_time.add_minutes(minutes_every_tick)
-    time_changed.emit(date_time.get_time())
+    print("Global time : " + date_time.get_time())
+    time_changed.emit(date_time)
 
