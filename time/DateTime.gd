@@ -53,3 +53,15 @@ func get_time() -> String:
 
 func get_date_time() -> String:
     return Time.get_datetime_string_from_unix_time(unix_timestamp)
+
+
+func equals(other: DateTime) -> bool:
+    return unix_timestamp == other.unix_timestamp
+
+
+func is_before(other: DateTime) -> bool:
+    return unix_timestamp < other.unix_timestamp
+
+
+func is_after(other: DateTime) -> bool:
+    return unix_timestamp > other.unix_timestamp
