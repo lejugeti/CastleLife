@@ -7,13 +7,26 @@ var _abilities: Array[Ability] = []
 
 
 func add_ability(ability: Ability) -> void:
-    var already_present: bool = _abilities.any(ability.equals)
-    if(!already_present):
-        _abilities.append(ability)
+    _abilities.append(ability)
 
 
 func remove_ability(ability: Ability) -> void:
     _abilities.erase(ability)
+
+
+func wait_and_remove_ability(ability: Ability) -> void:
+    var index_to_remove: int = _abilities.find(ability)
+
+    if(index_to_remove > -1):
+        if(ability.is_active):
+            ability.finished.connect(_on_ability_finished_remove_ability)
+        else:
+            remove_ability(ability)
+
+
+func _on_ability_finished_remove_ability(finished_ability: Ability):
+    remove_ability(finished_ability)
+    finished_ability.finished.disconnect(_on_ability_finished_remove_ability)
 
 
 func activate_by_name(ability_name: String) -> void:

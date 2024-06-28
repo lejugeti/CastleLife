@@ -24,12 +24,12 @@ layer_1/tile_data = PackedInt32Array()
 z_index = 2
 position = Vector2(8, -8)
 
-[node name="door_1" parent="." instance=ExtResource("3_kps2x")]
+[node name="door_1" parent="." node_paths=PackedStringArray("door_destination") instance=ExtResource("3_kps2x")]
 z_index = 1
 position = Vector2(144, 8.725)
-door_destination_ref = NodePath("../door_2")
+door_destination = NodePath("../door_2")
 
-[node name="door_2" parent="." instance=ExtResource("3_kps2x")]
+[node name="door_2" parent="." node_paths=PackedStringArray("door_destination") instance=ExtResource("3_kps2x")]
 z_index = 1
 position = Vector2(248, 8.725)
-door_destination_ref = NodePath("../door_1")
+door_destination = NodePath("../door_1")
