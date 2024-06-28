@@ -2,11 +2,12 @@ class_name Door
 extends Area2D
 
 
-@export_node_path("Door") var door_destination_ref: NodePath
+@export var door_destination: Door
 
-var bodies_overlapping: Array[Character] = []
 
-signal character_quitted_door(character: Character)
+## Abilities given by the door to travelers
+## Key : Character, Value : Ability
+var navigation_abilities: Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -16,35 +17,36 @@ func _ready():
     body_exited.connect(_on_character_stop_overlapping)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-    pass
-
-
 func _on_character_start_overlapping(body: Node2D):
     if(body is Character):
-        var door_initially_not_overlapped: bool = bodies_overlapping.size() == 0
-        bodies_overlapping.append(body)
+        var door_initially_not_overlapped: bool = get_bodies_overlapping() == 0
 
         if(door_initially_not_overlapped):
             $Sprites.play("opening")
 
         var character : Character = body as Character
-        var enter_ability: NavigateThroughDoor = NavigateThroughDoor.new(character, self)
-        character.ability_component.add_ability(enter_ability)
+        var enter_door_ability: NavigateThroughDoor = NavigateThroughDoor.new(character, self)
+        character.ability_component.add_ability(enter_door_ability)
+        character.up_key_pressed.connect(_on_up_key_pressed_activate_navigation)
+
+        navigation_abilities[character] = enter_door_ability
 
 
 func _on_character_stop_overlapping(body: Node2D):
     if(body is Character):
-        var character: Character = body as Character
-        bodies_overlapping.erase(character)
-        character_quitted_door.emit(character)
+        var character_leaving: Character = body as Character
+        var ability_to_remove: Ability = navigation_abilities.get(character_leaving)
+        navigation_abilities.erase(character_leaving)
+        character_leaving.ability_component.wait_and_remove_ability(ability_to_remove)
+        character_leaving.up_key_pressed.disconnect(_on_up_key_pressed_activate_navigation)
 
-        if(bodies_overlapping.size() == 0):
+        if(get_bodies_overlapping() == 0):
             $Sprites.play_backwards("opening")
 
 
-func get_door_destination() -> Door:
-    var destination: Door = get_node(door_destination_ref)
-    assert(destination != null)
-    return destination
+func get_bodies_overlapping():
+    return self.navigation_abilities.size()
+
+
+func _on_up_key_pressed_activate_navigation(character: Character):
+    character.ability_component.activate_by_tag(NavigateThroughDoor.TAG)

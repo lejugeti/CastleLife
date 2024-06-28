@@ -12,4 +12,4 @@ func _init():
 
 
 func execute():
-    pass
+    print("Dummy ability activated")

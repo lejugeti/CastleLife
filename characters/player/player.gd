@@ -16,7 +16,7 @@ func _ready():
 func _process(delta):
     var move_up: bool = Input.is_action_just_pressed("move_up")
     if move_up:
-        up_key_pressed.emit()
+        up_key_pressed.emit(self)
 
 
 func _physics_process(delta):
