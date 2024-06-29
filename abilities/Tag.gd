@@ -13,8 +13,8 @@ var tag_name: String:
 static var TAG_PATTERN: String = "^([\\w]+\\.?)+$"
 
 
-func _init(name):
-    self.tag_name = name
+func _init(new_tag_name):
+    self.tag_name = new_tag_name
 
 
 func assert_tag_is_valid(tag_value: String):

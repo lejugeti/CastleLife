@@ -4,6 +4,7 @@ extends Node
 
 var ability_name: String
 var tag: Tag
+var input_binding: StringName
 
 ## Tags required before activating this ability
 var activation_required_tags: Array[Tag] = []
