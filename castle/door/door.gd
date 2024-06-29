@@ -27,7 +27,6 @@ func _on_character_start_overlapping(body: Node2D):
         var character : Character = body as Character
         var enter_door_ability: NavigateThroughDoor = NavigateThroughDoor.new(character, self)
         character.ability_component.add_ability(enter_door_ability)
-        character.up_key_pressed.connect(_on_up_key_pressed_activate_navigation)
 
         navigation_abilities[character] = enter_door_ability
 
@@ -38,7 +37,6 @@ func _on_character_stop_overlapping(body: Node2D):
         var ability_to_remove: Ability = navigation_abilities.get(character_leaving)
         navigation_abilities.erase(character_leaving)
         character_leaving.ability_component.wait_and_remove_ability(ability_to_remove)
-        character_leaving.up_key_pressed.disconnect(_on_up_key_pressed_activate_navigation)
 
         if(get_bodies_overlapping() == 0):
             $Sprites.play_backwards("opening")
@@ -46,7 +44,3 @@ func _on_character_stop_overlapping(body: Node2D):
 
 func get_bodies_overlapping():
     return self.navigation_abilities.size()
-
-
-func _on_up_key_pressed_activate_navigation(character: Character):
-    character.ability_component.activate_by_tag(NavigateThroughDoor.TAG)

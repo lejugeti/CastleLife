@@ -3,6 +3,7 @@ extends Ability
 
 static var NAME: String = "navigate_through_door"
 static var TAG: Tag = Tag.new("Navigation.Door")
+static var INPUT_BINDING: StringName = AbilityInputs.INPUTS["INTERACT"]
 
 const STANDING_ANIMATION: String = "standing"
 const DOOR_IN_ANIMATION: String = "door_in"
@@ -20,6 +21,7 @@ signal door_out_animation_finished
 func _init(character: Character, door: Door):
     self.ability_name = NAME;
     self.tag = TAG
+    self.input_binding = INPUT_BINDING
 
     super.assert_valid_ability()
     _character = character

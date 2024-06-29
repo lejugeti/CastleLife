@@ -14,9 +14,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-    var move_up: bool = Input.is_action_just_pressed("move_up")
-    if move_up:
-        up_key_pressed.emit(self)
+    for ability_input in AbilityInputs.INPUTS.values():
+        if Input.is_action_just_pressed(ability_input):
+            ability_component.activate_by_input_binding(ability_input)
 
 
 func _physics_process(delta):
